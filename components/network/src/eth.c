@@ -1,7 +1,12 @@
 #include "eth.h"
 
+#include "sdkconfig.h"
+
+#if CONFIG_IDF_TARGET_ESP32
+
 #include <driver/gpio.h>
 #include <esp_eth.h>
+#include <esp_eth_phy_lan87xx.h>
 #include <esp_event.h>
 #include <esp_log.h>
 #include <esp_netif.h>
@@ -10,6 +15,7 @@
 
 #define ETH_MDC_GPIO    23
 #define ETH_MDIO_GPIO   18
+#define ETH_CLK_GPIO    0
 #define ETH_CLK_EN_GPIO 16
 #define ETH_PHY_ADDR    1
 
@@ -33,7 +39,6 @@ static void event_handler(void* arg, esp_event_base_t base, int32_t id, void* da
 
 void eth_init(void)
 {
-#if CONFIG_IDF_TARGET_ESP32
     gpio_config_t clk_en = {
         .pin_bit_mask = BIT64(ETH_CLK_EN_GPIO),
         .mode = GPIO_MODE_OUTPUT,
@@ -46,7 +51,7 @@ void eth_init(void)
     esp32_cfg.smi_gpio.mdc_num = ETH_MDC_GPIO;
     esp32_cfg.smi_gpio.mdio_num = ETH_MDIO_GPIO;
     esp32_cfg.clock_config.rmii.clock_mode = EMAC_CLK_EXT_IN;
-    esp32_cfg.clock_config.rmii.clock_gpio = EMAC_CLK_IN_GPIO;
+    esp32_cfg.clock_config.rmii.clock_gpio = ETH_CLK_GPIO;
 
     eth_mac_config_t mac_cfg = ETH_MAC_DEFAULT_CONFIG();
     mac_cfg.sw_reset_timeout_ms = 1000;
@@ -70,5 +75,12 @@ void eth_init(void)
 
     ESP_ERROR_CHECK(esp_eth_start(handle));
     ESP_LOGI(TAG, "Ethernet started");
-#endif
 }
+
+#else
+
+void eth_init(void)
+{
+}
+
+#endif
