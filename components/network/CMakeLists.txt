@@ -1,6 +1,6 @@
 set(network_priv_requires nvs_flash esp_netif esp_wifi esp_driver_gpio mdns)
 
-if(CONFIG_IDF_TARGET_ESP32)
+if(IDF_TARGET STREQUAL "esp32")
     list(APPEND network_priv_requires esp_eth espressif__lan87xx)
 endif()
 
