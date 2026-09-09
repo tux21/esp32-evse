@@ -1,9 +1,7 @@
-# yaml-language-server: $schema=https://github.com/dzurikmiroslav/esp32-evse/raw/refs/heads/master/board-config/board-config-schema-1.json
-
-deviceName: ESP32 minimal EVSE
+deviceName: WT32-ETH01 EVSE
 
 button:
-  gpio: 0
+  gpio: 14
 
 pilot:
   gpio: 33
@@ -13,17 +11,11 @@ pilot:
 acRelay:
   gpios: [32]
 
-serials:
-  - type: uart
-    name: UART via USB
-    rxdGpio: 3
-    txdGpio: 1
+onewire:
+  gpio: 17
+  temperatureSensor: true
 
 ota:
   channels:
     - name: stable
       path: https://dzurikmiroslav.github.io/esp32-evse/ota/stable/esp32.json
-    # - name: testing
-    #   path: https://dzurikmiroslav.github.io/esp32-evse/ota/testing/esp32.json
-    # - name: bleeding edge
-    #   path: https://dzurikmiroslav.github.io/esp32-evse/ota/bleeding-edge/esp32.json
